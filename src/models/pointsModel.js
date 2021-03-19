@@ -1,5 +1,8 @@
 import Signal from "../utils/signal";
-import {getProjectedPoint} from "../utils/geom";
+import {
+    getProjectedPoint,
+    triangulate,
+} from "../utils/geom";
 import {
     lerp,
     sign,
@@ -7,7 +10,6 @@ import {
     barycentricCoordinates,
     rgbToGamma,
     rgbToLinear,
-    triangulate,
 } from "../utils/maths";
 
 const maxEdgeLength = 300;

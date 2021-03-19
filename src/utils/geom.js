@@ -67,7 +67,7 @@ export function getProjectedPoint(a, b, pt){
 }
 
 
-export default function triangulate(vertices) {
+export function triangulate(vertices) {
     const triangles = [];
     const circles = [];
 
