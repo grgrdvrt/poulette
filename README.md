@@ -3,7 +3,7 @@
 Poulette a proof of concept for a color mixer interface.
 [demo](https://www.grgrdvrt.com/poulette-demo)
 
-![demo](demo.jpg)
+![demo](demo.gif)
 
 
 ## features
