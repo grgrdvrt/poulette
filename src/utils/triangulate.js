@@ -17,79 +17,68 @@ export default function triangulate(vertices) {
     }
 
     return triangles.filter(([a, b, c]) => {
-        return !(a === st[0] || a === st[1] || a === st[2] ||
-                 b === st[0] || b === st[1] || b === st[2] ||
-                 c === st[0] || c === st[1] || c === st[2]);
+        return st.indexOf(a) === -1
+            && st.indexOf(b) === -1
+            && st.indexOf(c) === -1;
     });
 }
 
 
 function createBoundingTriangle(vertices) {
-    let minx, miny, maxx, maxy;
-    for(let i in vertices) {
-        var vertex = vertices[i];
-        if(minx === undefined || vertex.x < minx) { minx = vertex.x; }
-        if(miny === undefined || vertex.y < miny) { miny = vertex.y; }
-        if(maxx === undefined || vertex.x > maxx) { maxx = vertex.x; }
-        if(maxy === undefined || vertex.y > maxy) { maxy = vertex.y; }
-    }
+    let xMin, yMin, xMax, yMax;
+    xMin = yMin = Number.POSITIVE_INFINITY;
+    xMax = yMax = Number.NEGATIVE_INFINITY;
+    vertices.forEach(({x, y}) => {
+        xMin = Math.min(x, xMin);
+        yMin = Math.min(y, yMin);
+        xMax = Math.max(x, xMax);
+        yMax = Math.max(y, yMax);
+    });
 
-    const dx = (maxx - minx) * 10;
-    const dy = (maxy - miny) * 10;
+    const dx = (xMax - xMin) * 10;
+    const dy = (yMax - yMin) * 10;
 
     return [
-        {x:minx - dx,   y:miny - dy*3},
-        {x:minx - dx,   y:maxy + dy},
-        {x:maxx + dx*3, y:maxy + dy},
+        {x:xMin - dx,   y:yMin - dy*3},
+        {x:xMin - dx,   y:yMax + dy},
+        {x:xMax + dx*3, y:yMax + dy},
     ];
-
 }
 
 
 function removeDuplicateEdges(edges) {
-    const uniqueEdges = [];
-    mainLoop: for(let i = 0; i < edges.length; i++){
-        const edge1 = edges[i];
-
+    return edges.filter(([a1, b1], i) => {
         for(let j = 0; j < edges.length; j++){
             if(j !== i){
-                const edge2 = edges[j];
-
-                if((edge1[0] === edge2[0] && edge1[1] === edge2[1])
-                   || (edge1[0] === edge2[1] && edge1[1] === edge2[0])) {
-                    continue mainLoop;
+                const [a2, b2] = edges[j];
+                if((a1 === a2 && b1 === b2) || (a1 === b2 && b1 === a2)) {
+                    return false;
                 }
             }
         }
-
-        uniqueEdges.push(edge1);
-    }
-
-    return uniqueEdges;
+        return true;
+    });
 }
 
 
 function addVertex(vertex, triangles, circles) {
     const edges = [];
 
-    for(let i in triangles) {
-        const triangle = triangles[i];
-
+    triangles.forEach((tri, i) => {
         if(isInCircle(circles[i], vertex)) {
-            edges.push([triangle[0], triangle[1]]);
-            edges.push([triangle[1], triangle[2]]);
-            edges.push([triangle[2], triangle[0]]);
-
+            edges.push(
+                [tri[0], tri[1]],
+                [tri[1], tri[2]],
+                [tri[2], tri[0]],
+            );
             delete triangles[i];
             delete circles[i];
         }
-    }
+    });
 
-    const uniqueEdges = removeDuplicateEdges(edges);
-
-    for(let i in uniqueEdges) {
-        const tri = [...uniqueEdges[i], vertex];
+    removeDuplicateEdges(edges).forEach(([a, b]) => {
+        const tri = [a, b, vertex];
         triangles.push(tri);
         circles.push(computeCircumcircle(...tri));
-    }
+    });
 }
