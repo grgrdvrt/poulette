@@ -1,6 +1,6 @@
 {
     "name": "Poulette",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "description": "A color palette for the web",
     "main": "index.js",
     "scripts": {
@@ -10,7 +10,8 @@
     },
     "author": "grgrdvrt",
     "license": "MIT",
-    "dependencies": {
-        "esbuild": "^0.9.0"
+    "dependencies": {},
+    "devDependencies": {
+        "esbuild": "^0.9.4"
     }
 }
