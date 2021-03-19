@@ -66,3 +66,66 @@ export function getProjectedPoint(a, b, pt){
     return {x, y, u};
 }
 
+
+export default function triangulate(vertices) {
+    const triangles = [];
+    const circles = [];
+
+    //bounding triangle
+    let xMin, yMin, xMax, yMax;
+    xMin = yMin = Number.POSITIVE_INFINITY;
+    xMax = yMax = Number.NEGATIVE_INFINITY;
+    vertices.forEach(({x, y}) => {
+        xMin = Math.min(x, xMin);
+        yMin = Math.min(y, yMin);
+        xMax = Math.max(x, xMax);
+        yMax = Math.max(y, yMax);
+    });
+
+    const dx = (xMax - xMin) * 10;
+    const dy = (yMax - yMin) * 10;
+
+    const st = [
+        {x:xMin - dx,   y:yMin - dy*3},
+        {x:xMin - dx,   y:yMax + dy},
+        {x:xMax + dx*3, y:yMax + dy},
+    ];
+
+    triangles.push(st);
+    circles.push(computeCircumcircle(...st));
+
+    //incremental triangulation
+    vertices.forEach(vertex =>  {
+        const edges = [];
+
+        triangles.forEach((tri, i) => {
+            if(isInCircle(circles[i], vertex)) {
+                edges.push(
+                    [tri[0], tri[1]],
+                    [tri[1], tri[2]],
+                    [tri[2], tri[0]],
+                );
+                delete triangles[i];
+                delete circles[i];
+            }
+        });
+
+        edges.forEach(([a1, b1], i) => {
+            if(edges.find(([a2, b2], j) => {
+                return i !== j
+                    && (a1 === a2 && b1 === b2)
+                    || (a1 === b2 && b1 === a2);
+            })){return;}
+            const tri = [a1, b1, vertex];
+            triangles.push(tri);
+            circles.push(computeCircumcircle(...tri));
+        });
+    });
+
+    //remove bounding triangle
+    return triangles.filter(([a, b, c]) => {
+        return st.indexOf(a) === -1
+            && st.indexOf(b) === -1
+            && st.indexOf(c) === -1;
+    });
+}

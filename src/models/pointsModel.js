@@ -1,4 +1,3 @@
-import triangulate from "../utils/triangulate";
 import Signal from "../utils/signal";
 import {getProjectedPoint} from "../utils/geom";
 import {
@@ -8,6 +7,7 @@ import {
     barycentricCoordinates,
     rgbToGamma,
     rgbToLinear,
+    triangulate,
 } from "../utils/maths";
 
 const maxEdgeLength = 300;
