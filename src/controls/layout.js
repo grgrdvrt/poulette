@@ -6,19 +6,15 @@ const marginSizeRatio = 0.05;
 const marginRepulsion = 0.05;
 
 export default class Layout {
-    constructor(pointsModel, width, height){
+    constructor(pointsModel){
         this.pointsModel = pointsModel;
         this.vels = new Map();
 
-
-        this.width = width;
-        this.height = height;
-
         this.margins = {
-            left:marginSizeRatio * this.width,
-            right:(1 - marginSizeRatio) * this.width,
-            top:marginSizeRatio * this.height,
-            bottom:(1 - marginSizeRatio) * this.height,
+            left:marginSizeRatio * this.pointsModel.width,
+            right:(1 - marginSizeRatio) * this.pointsModel.width,
+            top:marginSizeRatio * this.pointsModel.height,
+            bottom:(1 - marginSizeRatio) * this.pointsModel.height,
         };
 
         this.points = this.pointsModel.points.map(pt => {

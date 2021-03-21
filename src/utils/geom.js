@@ -1,5 +1,29 @@
-import {clamp} from "./maths";
+import {
+    clamp,
+    sign,
+} from "./maths";
 const EPSILON = 1.0e-6;
+
+
+export function isPointInTriangle (pt, v1, v2, v3)
+{
+    const d1 = sign(pt, v1, v2);
+    const d2 = sign(pt, v2, v3);
+    const d3 = sign(pt, v3, v1);
+
+    const has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+    const has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+
+    return !(has_neg && has_pos);
+}
+
+export function barycentricCoordinates(pt, v1, v2, v3){
+    const r = (v2.y - v3.y) * (v1.x - v3.x) + (v3.x - v2.x) * (v1.y - v3.y);
+    const w1 = ((v2.y - v3.y) * (pt.x - v3.x) + (v3.x - v2.x) * (pt.y - v3.y)) / r;
+    const w2 = ((v3.y - v1.y) * (pt.x - v3.x) + (v1.x - v3.x) * (pt.y - v3.y)) / r;
+    const w3 = 1 - w1 - w2;
+    return [w1, w2, w3];
+}
 
 export function computeCircumcircle(v0, v1, v2) {
     // From: http://www.exaflop.org/docs/cgafaq/cga1.html
@@ -123,9 +147,10 @@ export function triangulate(vertices) {
     });
 
     //remove bounding triangle
-    return triangles.filter(([a, b, c]) => {
-        return st.indexOf(a) === -1
-            && st.indexOf(b) === -1
-            && st.indexOf(c) === -1;
+    return triangles.filter(tri => {
+        return tri
+            && !st.includes(tri[0])
+            && !st.includes(tri[1])
+            && !st.includes(tri[2]);
     });
 }

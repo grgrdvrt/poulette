@@ -9,9 +9,7 @@ import PointerControl from "./controls/pointerControl";
 
 class Main {
     constructor(){
-        this.width = 400;
-        this.height = 400;
-        this.pointsModel = new PointsModel();
+        this.pointsModel = new PointsModel(400, 400);
         const initialColors = [
             0xffffff,//white
             0x000000,//black
@@ -32,18 +30,18 @@ class Main {
         this.dom = document.createElement("div");
         this.dom.classList.add("mainContainer");
         Object.assign(this.dom.style, {
-            width:this.width + "px",
-            height:this.height + "px",
+            width:this.pointsModel.width + "px",
+            height:this.pointsModel.height + "px",
         });
         document.body.appendChild(this.dom);
 
-        this.meshView = new MeshView(this.pointsModel, this.width, this.height);
+        this.meshView = new MeshView(this.pointsModel);
         this.dom.appendChild(this.meshView.dom);
 
-        this.pointsView = new PointsView(this.pointsModel, this.width, this.height);
+        this.pointsView = new PointsView(this.pointsModel);
         this.dom.appendChild(this.pointsView.dom);
 
-        this.layout = new Layout(this.pointsModel, this.width, this.height);
+        this.layout = new Layout(this.pointsModel);
         this.pointerControl = new PointerControl(this.pointsModel, this.pointsView, this.meshView);
         this.pointerControl.colorSelected.add(this.onColorSelected, this);
     }
@@ -60,8 +58,8 @@ class Main {
             this.pointsModel.add(
                 color,
                 {
-                    x:Math.random() + 0.5 * this.width,
-                    y:Math.random() + 0.5 * this.height,
+                    x:Math.random() + 0.5 * this.pointsModel.width,
+                    y:Math.random() + 0.5 * this.pointsModel.height,
                 }
             );
         });

@@ -1,11 +1,8 @@
 export default class PointsView {
-    constructor(pointsModel, width, height){
+    constructor(pointsModel){
         this.pointsModel = pointsModel;
         this.pointsModel.pointAdded.add(this.addPoint, this);
         this.pointsModel.pointRemoved.add(this.removePoint, this);
-
-        this.width = width;
-        this.height = height;
 
         this.initDom();
     }

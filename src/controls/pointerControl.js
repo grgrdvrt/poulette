@@ -1,4 +1,7 @@
 import Signal from "../utils/signal";
+import {
+    getColorInMesh
+} from "../utils/color";
 
 const minDragDist = 5;
 
@@ -39,8 +42,8 @@ export default class PointerControl {
     isPointInArea(position){
         return position.x >= 0
             && position.y >= 0
-            && position.x <= this.meshView.width
-            && position.y <= this.meshView.height;
+            && position.x <= this.pointsModel.width
+            && position.y <= this.pointsModel.height;
     }
 
     onPointDown = e => {
@@ -58,7 +61,8 @@ export default class PointerControl {
 
     onMeshDown = e => {
         this.updatePointerPosition(e);
-        const color = this.pointsModel.getColorAt(
+        const color = getColorInMesh(
+            this.pointsModel.triangles,
             this.pointerPosition.x,
             this.pointerPosition.y
         );
@@ -106,7 +110,8 @@ export default class PointerControl {
 
     onDragSelection = e => {
         this.updatePointerPosition(e);
-        const color = this.pointsModel.getColorAt(
+        const color = getColorInMesh(
+            this.pointsModel.triangles,
             this.pointerPosition.x,
             this.pointerPosition.y
         );

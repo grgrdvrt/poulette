@@ -41,10 +41,8 @@ void main() {
 
 
 export default class MeshView{
-    constructor(pointsModel, width, height){
+    constructor(pointsModel){
         this.pointsModel = pointsModel;
-        this.width = width;
-        this.height = height;
 
         this.initDom();
         this.gl = this.initGL();
@@ -52,15 +50,15 @@ export default class MeshView{
 
     initDom(){
         this.canvas = document.createElement("canvas");
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
+        this.canvas.width = this.pointsModel.width;
+        this.canvas.height = this.pointsModel.height;
         this.dom = this.canvas;
         this.dom.classList.add("meshCanvas");
     }
 
     initGL(){
         const gl = this.canvas.getContext("webgl");
-        gl.viewport(0, 0, this.width, this.height);
+        gl.viewport(0, 0, this.pointsModel.width, this.pointsModel.height);
 
         const program = createProgram(
             gl,
@@ -104,8 +102,8 @@ export default class MeshView{
         const colors = new Float32Array(3 * nPoints);
         this.pointsModel.points.forEach((pt, i) => {
 
-            positions[2 * i] = 2 * pt.x / this.width - 1;
-            positions[2 * i + 1] = 1 - 2 * pt.y / this.height;
+            positions[2 * i] = 2 * pt.x / this.pointsModel.width - 1;
+            positions[2 * i + 1] = 1 - 2 * pt.y / this.pointsModel.height;
 
             colors[3 * i] = pt.color.r;
             colors[3 * i + 1] = pt.color.g;
