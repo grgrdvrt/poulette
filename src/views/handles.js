@@ -1,3 +1,5 @@
+import {colorToHTML} from "../utils/color";
+
 export default class Handles {
     constructor(model){
         this.model = model;
@@ -50,10 +52,7 @@ export default class Handles {
     }
 
     setHandleDomColor(handleDom, color){
-        const r = Math.round(color.r * 255);
-        const g = Math.round(color.g * 255);
-        const b = Math.round(color.b * 255);
-        handleDom.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+        handleDom.style.backgroundColor = colorToHTML(color);
     }
 
     setHandleDomPosition(handleDom, position){

@@ -5,6 +5,7 @@ import Mesh from "./views/mesh";
 
 import Layout from "./controls/layout";
 import PointerControl from "./controls/pointerControl";
+import {colorToHTML} from "./utils/color";
 
 
 class Main {
@@ -50,10 +51,7 @@ class Main {
     }
 
     onColorSelected(color){
-        const r = Math.round(color.r * 255);
-        const g = Math.round(color.g * 255);
-        const b = Math.round(color.b * 255);
-        this.dom.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+        this.dom.style.backgroundColor = colorToHTML(color);
     }
 
     initPoints(colors){

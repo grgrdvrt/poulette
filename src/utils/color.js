@@ -73,3 +73,10 @@ export function getColorInTriangle(tri, pt){
         b:al.b * w1 + bl.b * w2 + cl.b * w3,
     });
 }
+
+export function colorToHTML(color){
+    const r = Math.round(color.r * 255);
+    const g = Math.round(color.g * 255);
+    const b = Math.round(color.b * 255);
+    return `rgb(${r}, ${g}, ${b})`;
+}
