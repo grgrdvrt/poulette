@@ -40,9 +40,9 @@ void main() {
 `;
 
 
-export default class MeshView{
-    constructor(pointsModel){
-        this.pointsModel = pointsModel;
+export default class Mesh{
+    constructor(model){
+        this.model = model;
 
         this.initDom();
         this.gl = this.initGL();
@@ -50,15 +50,15 @@ export default class MeshView{
 
     initDom(){
         this.canvas = document.createElement("canvas");
-        this.canvas.width = this.pointsModel.width;
-        this.canvas.height = this.pointsModel.height;
+        this.canvas.width = this.model.width;
+        this.canvas.height = this.model.height;
         this.dom = this.canvas;
         this.dom.classList.add("meshCanvas");
     }
 
     initGL(){
         const gl = this.canvas.getContext("webgl");
-        gl.viewport(0, 0, this.pointsModel.width, this.pointsModel.height);
+        gl.viewport(0, 0, this.model.width, this.model.height);
 
         const program = createProgram(
             gl,
@@ -97,13 +97,13 @@ export default class MeshView{
     update(){
         const gl = this.gl;
 
-        const nPoints = this.pointsModel.points.length;
+        const nPoints = this.model.points.length;
         const positions = new Float32Array(2 * nPoints);
         const colors = new Float32Array(3 * nPoints);
-        this.pointsModel.points.forEach((pt, i) => {
+        this.model.points.forEach((pt, i) => {
 
-            positions[2 * i] = 2 * pt.x / this.pointsModel.width - 1;
-            positions[2 * i + 1] = 1 - 2 * pt.y / this.pointsModel.height;
+            positions[2 * i] = 2 * pt.x / this.model.width - 1;
+            positions[2 * i + 1] = 1 - 2 * pt.y / this.model.height;
 
             colors[3 * i] = pt.color.r;
             colors[3 * i + 1] = pt.color.g;
@@ -111,8 +111,8 @@ export default class MeshView{
         });
 
         const indices = [];
-        this.pointsModel.triangles.forEach(t => {
-            indices.push(...t.map(p => this.pointsModel.points.indexOf(p)));
+        this.model.triangles.forEach(t => {
+            indices.push(...t.map(p => this.model.points.indexOf(p)));
         });
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);

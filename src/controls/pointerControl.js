@@ -6,16 +6,16 @@ import {
 const minDragDist = 5;
 
 export default class PointerControl {
-    constructor(pointsModel, pointsView, meshView){
-        this.pointsModel = pointsModel;
-        this.pointsView = pointsView;
-        this.meshView = meshView;
+    constructor(model, handles, mesh){
+        this.model = model;
+        this.handles = handles;
+        this.mesh = mesh;
 
         this.colorSelected = new Signal();
 
         this.initialDraggingPosition = null;
-        this.draggingPoint = null;
-        this.selectionPoint = null;
+        this.draggingHandle = null;
+        this.selectionHandle = null;
 
         this.isTouchDown = false;
         this.pointerPosition = {
@@ -23,56 +23,49 @@ export default class PointerControl {
             y:undefined,
         };
 
-        this.pointsView.dom.addEventListener("mousedown", this.onPointDown);
-        this.meshView.dom.addEventListener("mousedown", this.onMeshDown);
+        this.handles.dom.addEventListener("mousedown", this.onHandleDown);
+        this.mesh.dom.addEventListener("mousedown", this.onMeshDown);
 
-        this.pointsView.dom.addEventListener("touchstart", this.onPointDown);
-        this.meshView.dom.addEventListener("touchstart", this.onMeshDown);
+        this.handles.dom.addEventListener("touchstart", this.onHandleDown);
+        this.mesh.dom.addEventListener("touchstart", this.onMeshDown);
     }
 
     updatePointerPosition(e){
         if(e.type === "touchend"){
             return;
         }
-        const rect = this.meshView.dom.getBoundingClientRect();
+        const rect = this.mesh.dom.getBoundingClientRect();
         this.pointerPosition.x = ((e.touches?.[0] || e)?.pageX - rect.x) || 0;
         this.pointerPosition.y = ((e.touches?.[0] || e)?.pageY - rect.y) || 0;
     }
 
-    isPointInArea(position){
-        return position.x >= 0
-            && position.y >= 0
-            && position.x <= this.pointsModel.width
-            && position.y <= this.pointsModel.height;
-    }
-
-    onPointDown = e => {
+    onHandleDown = e => {
         this.updatePointerPosition(e);
-        this.draggingPoint = this.pointsView.getPointByDom(e.target);
-        if(this.draggingPoint){
+        this.draggingHandle = this.handles.getHandleByDom(e.target);
+        if(this.draggingHandle){
             this.initialDraggingPosition = {...this.pointerPosition};
-            document.addEventListener("mouseup", this.onStopDragPoint);
-            document.addEventListener("mousemove", this.onDragPoint);
+            document.addEventListener("mouseup", this.onStopDragHandle);
+            document.addEventListener("mousemove", this.onDragHandle);
 
-            document.addEventListener("touchend", this.onStopDragPoint);
-            document.addEventListener("touchmove", this.onDragPoint);
+            document.addEventListener("touchend", this.onStopDragHandle);
+            document.addEventListener("touchmove", this.onDragHandle);
         }
     }
 
     onMeshDown = e => {
         this.updatePointerPosition(e);
         const color = getColorInMesh(
-            this.pointsModel.triangles,
+            this.model.triangles,
             this.pointerPosition.x,
             this.pointerPosition.y
         );
         if(color){
-            this.selectionPoint = {
-                dom:this.pointsView.createPointDom(color),
+            this.selectionHandle = {
+                dom:this.handles.createHandleDom(color),
                 model:{...this.pointerPosition, color}
             };
-            this.pointsView.dom.appendChild(this.selectionPoint.dom);
-            this.pointsView.setPointDomPosition(this.selectionPoint.dom, this.pointerPosition);
+            this.handles.dom.appendChild(this.selectionHandle.dom);
+            this.handles.setHandleDomPosition(this.selectionHandle.dom, this.pointerPosition);
             document.addEventListener("mouseup", this.onStopDragSelection);
             document.addEventListener("mousemove", this.onDragSelection);
 
@@ -81,56 +74,56 @@ export default class PointerControl {
         }
     }
 
-    onDragPoint = e => {
+    onDragHandle = e => {
         this.updatePointerPosition(e);
-        this.draggingPoint.model.x = this.pointerPosition.x;
-        this.draggingPoint.model.y = this.pointerPosition.y;
+        this.draggingHandle.model.x = this.pointerPosition.x;
+        this.draggingHandle.model.y = this.pointerPosition.y;
     }
 
-    onStopDragPoint = e => {
+    onStopDragHandle = e => {
         this.updatePointerPosition(e);
-        if(this.isPointInArea(this.pointerPosition)){
+        if(this.model.isPointInArea(this.pointerPosition)){
             if(Math.hypot(
                 this.pointerPosition.x - this.initialDraggingPosition.x,
                 this.pointerPosition.y - this.initialDraggingPosition.y,
             ) < minDragDist){
-                this.colorSelected.dispatch(this.draggingPoint.model.color);
+                this.colorSelected.dispatch(this.draggingHandle.model.color);
             }
         }
         else{
-            this.pointsModel.remove(this.draggingPoint.model);
+            this.model.remove(this.draggingHandle.model);
         }
-        this.draggingPoint = null;
-        document.removeEventListener("mouseup", this.onStopDragPoint);
-        document.removeEventListener("mousemove", this.onDragPoint);
+        this.draggingHandle = null;
+        document.removeEventListener("mouseup", this.onStopDragHandle);
+        document.removeEventListener("mousemove", this.onDragHandle);
 
-        document.removeEventListener("touchend", this.onStopDragPoint);
-        document.removeEventListener("touchmove", this.onDragPoint);
+        document.removeEventListener("touchend", this.onStopDragHandle);
+        document.removeEventListener("touchmove", this.onDragHandle);
     }
 
     onDragSelection = e => {
         this.updatePointerPosition(e);
         const color = getColorInMesh(
-            this.pointsModel.triangles,
+            this.model.triangles,
             this.pointerPosition.x,
             this.pointerPosition.y
         );
         if(color){
-            this.selectionPoint.model.color = color;
-            this.pointsView.setPointDomColor(this.selectionPoint.dom, color);
+            this.selectionHandle.model.color = color;
+            this.handles.setHandleDomColor(this.selectionHandle.dom, color);
             this.colorSelected.dispatch(color);
         }
-        this.pointsView.setPointDomPosition(this.selectionPoint.dom, this.pointerPosition);
+        this.handles.setHandleDomPosition(this.selectionHandle.dom, this.pointerPosition);
     }
 
     onStopDragSelection = e => {
         this.updatePointerPosition(e);
-        if(this.isPointInArea(this.pointerPosition)){
-            this.pointsModel.add(this.selectionPoint.model.color, this.pointerPosition);
-            this.colorSelected.dispatch(this.selectionPoint.model.color);
+        if(this.model.isPointInArea(this.pointerPosition)){
+            this.model.add(this.selectionHandle.model.color, this.pointerPosition);
+            this.colorSelected.dispatch(this.selectionHandle.model.color);
         }
-        this.pointsView.dom.removeChild(this.selectionPoint.dom);
-        this.selectionPoint = null;
+        this.handles.dom.removeChild(this.selectionHandle.dom);
+        this.selectionHandle = null;
 
         document.removeEventListener("mouseup", this.onStopDragSelection);
         document.removeEventListener("mousemove", this.onDragSelection);

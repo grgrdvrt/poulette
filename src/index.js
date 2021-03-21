@@ -1,7 +1,7 @@
-import PointsModel from "./models/pointsModel";
+import Model from "./models/model";
 
-import PointsView from "./views/pointsView";
-import MeshView from "./views/meshView";
+import Handles from "./views/handles";
+import Mesh from "./views/mesh";
 
 import Layout from "./controls/layout";
 import PointerControl from "./controls/pointerControl";
@@ -9,7 +9,7 @@ import PointerControl from "./controls/pointerControl";
 
 class Main {
     constructor(){
-        this.pointsModel = new PointsModel(400, 400);
+        this.model = new Model(400, 400);
         const initialColors = [
             0xffffff,//white
             0x000000,//black
@@ -26,24 +26,27 @@ class Main {
         }));
 
         this.initPoints(initialColors);
+        this.initDom();
+        document.body.appendChild(this.dom);
 
+        this.layout = new Layout(this.model);
+        this.pointerControl = new PointerControl(this.model, this.handles, this.mesh);
+        this.pointerControl.colorSelected.add(this.onColorSelected, this);
+    }
+
+    initDom(){
         this.dom = document.createElement("div");
         this.dom.classList.add("mainContainer");
         Object.assign(this.dom.style, {
-            width:this.pointsModel.width + "px",
-            height:this.pointsModel.height + "px",
+            width:this.model.width + "px",
+            height:this.model.height + "px",
         });
-        document.body.appendChild(this.dom);
 
-        this.meshView = new MeshView(this.pointsModel);
-        this.dom.appendChild(this.meshView.dom);
+        this.mesh = new Mesh(this.model);
+        this.dom.appendChild(this.mesh.dom);
 
-        this.pointsView = new PointsView(this.pointsModel);
-        this.dom.appendChild(this.pointsView.dom);
-
-        this.layout = new Layout(this.pointsModel);
-        this.pointerControl = new PointerControl(this.pointsModel, this.pointsView, this.meshView);
-        this.pointerControl.colorSelected.add(this.onColorSelected, this);
+        this.handles = new Handles(this.model);
+        this.dom.appendChild(this.handles.dom);
     }
 
     onColorSelected(color){
@@ -55,11 +58,11 @@ class Main {
 
     initPoints(colors){
         colors.forEach(color => {
-            this.pointsModel.add(
+            this.model.add(
                 color,
                 {
-                    x:Math.random() + 0.5 * this.pointsModel.width,
-                    y:Math.random() + 0.5 * this.pointsModel.height,
+                    x:Math.random() + 0.5 * this.model.width,
+                    y:Math.random() + 0.5 * this.model.height,
                 }
             );
         });
@@ -67,9 +70,9 @@ class Main {
 
     update(){
         this.layout.update([this.pointerControl.draggingPoint]);
-        this.pointsModel.updateTriangles();
-        this.pointsView.update();
-        this.meshView.update();
+        this.model.updateTriangles();
+        this.handles.update();
+        this.mesh.update();
         requestAnimationFrame(this.update.bind(this));
     }
 }

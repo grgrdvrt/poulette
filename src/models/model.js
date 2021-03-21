@@ -4,9 +4,7 @@ import {
     triangulate,
 } from "../utils/geom";
 
-const maxEdgeLength = 300;
-
-export default class PointsModel{
+export default class Model{
     constructor(width, height){
         this.width = width;
         this.height = height;
@@ -58,6 +56,14 @@ export default class PointsModel{
 
     updateTriangles(){
         this.triangles = triangulate(this.points);
+    }
+
+
+    isPointInArea(position){
+        return position.x >= 0
+            && position.y >= 0
+            && position.x <= this.width
+            && position.y <= this.height;
     }
 
 }
