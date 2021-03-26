@@ -15,13 +15,14 @@
             }
 
             .mainContainer{
-                display:flex;
+                display:inline-flex;
                 user-select:none;
             }
 
             .paletteContainer{
                 position:relative;
                 overflow:hidden;
+                transform: translateZ(0);
                 border-radius:30px;
                 border:solid 1px rgba(0, 0, 0, 0.1);
             }
@@ -59,6 +60,7 @@
                 display:flex;
                 flex-direction:column;
                 flex-wrap:wrap;
+                height:100%;
             }
 
             .deletedColorItem{
@@ -72,11 +74,13 @@
             }
 
             .colorPreview{
+                overflow:hidden;
                 position:relative;
             }
 
             .colorPreviewTransition{
                 position:absolute;
+                -webkit-mask-image: -webkit-radial-gradient(white, black);
                 transform:translate(-50%, -50%) scale(0, 0);
             }
             .colorPreviewTransition.finalState{

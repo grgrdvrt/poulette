@@ -38,6 +38,7 @@ class Main {
     initDom(){
         this.dom = document.createElement("div");
         this.dom.classList.add("mainContainer");
+        this.dom.style.height = this.model.height + "px";
 
         this.paletteContainer = document.createElement("div");
         this.dom.appendChild(this.paletteContainer);
