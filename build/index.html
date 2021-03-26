@@ -15,6 +15,7 @@
             }
 
             .mainContainer{
+                display:flex;
                 position:relative;
                 user-select:none;
                 border-radius:30px;
@@ -50,6 +51,22 @@
                 left:10px;
                 width:100px;
                 height:100px;
+                filter:drop-shadow(0 0 4px rgba(0, 0, 0, 0.2));
+            }
+
+            .deletedColors{
+                display:flex;
+                flex-direction:column;
+                flex-wrap:wrap;
+            }
+
+            .deletedColorItem{
+                width:20px;
+                height:20px;
+                margin:1px;
+                border:none;
+                border-radius:10px;
+                cursor:pointer;
                 filter:drop-shadow(0 0 4px rgba(0, 0, 0, 0.2));
             }
         </style>

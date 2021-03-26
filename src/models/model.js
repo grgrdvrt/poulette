@@ -15,18 +15,6 @@ export default class Model{
         this.colorAdded = new Signal();
 
         this.points = [];
-        this.allColors = [
-            0xffffff,
-            0x000000,
-
-            0xff0000,
-            0x00ff00,
-            0x0000ff,
-
-            0x00ffff,
-            0xff00ff,
-            0xffff00,
-        ].map(hexToRgb);
     }
 
     add(color, position){
@@ -36,9 +24,6 @@ export default class Model{
             y:position.y
         };
         this.points.push(point);
-        if(!this.allColors.includes(color)){
-            this.allColors.push(color);
-        }
         this.updateTriangles();
         this.pointAdded.dispatch(point);
         this.colorAdded.dispatch(color);

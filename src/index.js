@@ -2,6 +2,7 @@ import Model from "./models/model";
 
 import Handles from "./views/handles";
 import Mesh from "./views/mesh";
+import DeletedColors from "./views/deletedColors";
 
 import Layout from "./controls/layout";
 import PointerControl from "./controls/pointerControl";
@@ -47,6 +48,9 @@ class Main {
 
         this.handles = new Handles(this.model);
         this.dom.appendChild(this.handles.dom);
+
+        this.deletedColors = new DeletedColors(this.model);
+        this.dom.appendChild(this.deletedColors.dom);
     }
 
     onColorSelected(color){
