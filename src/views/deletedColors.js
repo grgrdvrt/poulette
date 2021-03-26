@@ -6,7 +6,6 @@ export default class DeletedColors{
         this.model = model;
         this.items = new Map();
         this.model.pointRemoved.add(this.addColor, this);
-        this.colorRetreived = new Signal();
         this.initDom();
     }
 
@@ -30,14 +29,7 @@ export default class DeletedColors{
             const color = this.items.get(item);
             item.remove();
             this.items.delete(item);
-            this.model.add(
-                color,
-                {
-                    x:Math.random() - 0.5 + 0.5 * this.model.width,
-                    y:Math.random() - 0.5 + 0.5 * this.model.height
-                }
-            );
-            this.colorRetreived.dispatch(color);
+            this.model.retrieveColor(color);
         }
     }
 }

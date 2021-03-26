@@ -52,6 +52,17 @@ export default class Model{
         this.pointSelected.dispatch(point);
     }
 
+    retrieveColor(color){
+        const point = this.add(
+            color,
+            {
+                x:Math.random() - 0.5 + 0.5 * this.width,
+                y:Math.random() - 0.5 + 0.5 * this.height
+            }
+        );
+        this.selectPoint(point);
+    }
+
 
     isPointInArea(position){
         return position.x >= 0

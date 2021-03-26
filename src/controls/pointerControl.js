@@ -61,8 +61,11 @@ export default class PointerControl {
                 dom:this.handles.createHandleDom(color),
                 model:{...this.pointerPosition, color}
             };
+
             this.handles.dom.appendChild(this.selectionHandle.dom);
             this.handles.setHandleDomPosition(this.selectionHandle.dom, this.pointerPosition);
+            this.model.selectPoint(this.selectionHandle.model);
+
             document.addEventListener("mouseup", this.onStopDragSelection);
             document.addEventListener("mousemove", this.onDragSelection);
 

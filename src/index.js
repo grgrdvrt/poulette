@@ -1,7 +1,8 @@
 import Model from "./models/model";
 
-import Handles from "./views/handles";
+import ColorPreview from "./views/colorPreview";
 import Mesh from "./views/mesh";
+import Handles from "./views/handles";
 import DeletedColors from "./views/deletedColors";
 
 import Layout from "./controls/layout";
@@ -32,37 +33,31 @@ class Main {
 
         this.layout = new Layout(this.model);
         this.pointerControl = new PointerControl(this.model, this.handles, this.mesh);
-
-        this.deletedColors.colorRetreived.add(this.onColorSelected, this);
-
-        this.model.pointSelected.add(this.onPointSelected, this);
-        this.model.colorSelected.add(this.onColorSelected, this);
     }
 
     initDom(){
         this.dom = document.createElement("div");
         this.dom.classList.add("mainContainer");
-        Object.assign(this.dom.style, {
+
+        this.paletteContainer = document.createElement("div");
+        this.dom.appendChild(this.paletteContainer);
+        this.paletteContainer.classList.add("paletteContainer");
+        Object.assign(this.paletteContainer.style, {
             width:this.model.width + "px",
             height:this.model.height + "px",
         });
 
+        this.preview = new ColorPreview(this.model);
+        this.paletteContainer.appendChild(this.preview.dom);
+
         this.mesh = new Mesh(this.model);
-        this.dom.appendChild(this.mesh.dom);
+        this.paletteContainer.appendChild(this.mesh.dom);
 
         this.handles = new Handles(this.model);
-        this.dom.appendChild(this.handles.dom);
+        this.paletteContainer.appendChild(this.handles.dom);
 
         this.deletedColors = new DeletedColors(this.model);
         this.dom.appendChild(this.deletedColors.dom);
-    }
-
-    onPointSelected(point){
-        this.dom.style.backgroundColor = colorToHTML(point.color);
-    }
-
-    onColorSelected(color){
-        this.dom.style.backgroundColor = colorToHTML(color);
     }
 
     initPoints(colors){
