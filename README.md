@@ -1,24 +1,24 @@
 # Poulette, the color palette
 
-Poulette a proof of concept for a color mixer interface.
-[demo](https://www.grgrdvrt.com/poulette-demo)
+Poulette a proof of concept for a color mixer interface.  
+[Play with the demo](https://www.grgrdvrt.com/poulette-demo)
 
 ![demo](images/demo.gif)
 
 
-## features
+## Features
 - select an existing color by clicking on a point
 - click and drag on the palette to create a new color
 - organize the palette by dragging the points around 
 - remove an existing color by dragging it outside of the component
+- deleted colors appear in a list an can be re-introduced.
 
-In theory any RGB color can be reached with Poulette. In fact you can organize the colors in more familiar configurations.  
+The the colors can be arranged in more familiar configurations. 
 ![palettes configurations](images/palette_configurations.jpg)
 
-In practice it requires the presence of pure red, green, blue, cyan, magenta yellow, black and white in the palette. It also requires the possibility to retrieve deleted colors, which is not supported at the moment.  
-For these reasons Poulette should probably be paired with an additional interface to allow the introduction of predefined colors or the reintroduction of deleted colors  
+## Code
+The wonderful [esbuild](https://esbuild.github.io/) is used for bundling the demo but any es6-compatible bundler should work.  
+I chose to not package the code as a ready-to-use component as it is difficult to satisfy every react, angular, vue, svelte... but I'd be very happy to see adaptations for these frameworks.  
 
-## usage
-At the moment the code can't be used out of the box, you will need to adapt it if you want to include it in your project.  
-Also, note that this code has not been tested on a wide range of devices and browsers. You may encounter issues.
+Note that this code has not been tested on a wide range of devices and browsers. Don't hesitate to report the issues you may find.
 

@@ -1,7 +1,7 @@
 {
     "name": "Poulette",
     "version": "0.1.0",
-    "description": "A color palette for the web",
+    "description": "An innovative color palette",
     "main": "index.js",
     "scripts": {
         "start": "esbuild src/index.js --outfile=build/app.js --bundle --sourcemap --watch",
