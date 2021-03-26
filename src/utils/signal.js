@@ -1,5 +1,3 @@
-//choices must be made on usage:
-//consequences of a dispatch with multiple listeners, removes and recursion ?
 class Listener {
     constructor(signal, callback, scope, args) {
         this.callback = callback;
@@ -13,7 +11,6 @@ class Listener {
         this.callback.apply(this.scope, [...args, ...this.args]);
     }
 }
-
 
 export default class Signal {
     constructor() {
@@ -60,12 +57,6 @@ export default class Signal {
         }
     }
 
-    /* NOTE
-        this is the opposite of an add
-        add subscribes a listener to this signal
-        this subscribes this signal to an object
-    */
-    //FIXME store details internally ?
     listenEvt(target, evtName){
         const bind = this.dispatch.bind(this);
         target.addEventListener(evtName, bind);

@@ -3,6 +3,7 @@ import {
     getProjectedPoint,
     triangulate,
 } from "../utils/geom";
+import {hexToRgb} from "../utils/color";
 
 export default class Model{
     constructor(width, height){
@@ -25,7 +26,7 @@ export default class Model{
             0x00ffff,
             0xff00ff,
             0xffff00,
-        ];
+        ].map(hexToRgb);
     }
 
     add(color, position){

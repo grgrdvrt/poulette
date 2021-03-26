@@ -5,7 +5,10 @@ import Mesh from "./views/mesh";
 
 import Layout from "./controls/layout";
 import PointerControl from "./controls/pointerControl";
-import {colorToHTML} from "./utils/color";
+import {
+    colorToHTML,
+    hexToRgb,
+} from "./utils/color";
 
 
 class Main {
@@ -20,11 +23,7 @@ class Main {
             0x85ff5c,//green
             0x57c7ff,//blue
             0xff99dd,//pink
-        ].map(c => ({
-            r:(c >> 16) / 255,
-            g:(c >> 8 & 0xff) / 255,
-            b:(c & 0xff) / 255,
-        }));
+        ].map(hexToRgb);
 
         this.initPoints(initialColors);
         this.initDom();
