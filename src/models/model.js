@@ -12,7 +12,8 @@ export default class Model{
 
         this.pointRemoved = new Signal();
         this.pointAdded = new Signal();
-        this.colorAdded = new Signal();
+        this.pointSelected = new Signal();
+        this.colorSelected = new Signal();
 
         this.points = [];
     }
@@ -26,7 +27,6 @@ export default class Model{
         this.points.push(point);
         this.updateTriangles();
         this.pointAdded.dispatch(point);
-        this.colorAdded.dispatch(color);
         return point;
     }
 
@@ -42,6 +42,14 @@ export default class Model{
 
     updateTriangles(){
         this.triangles = triangulate(this.points);
+    }
+
+    selectColor(color){
+        this.colorSelected.dispatch(color);
+    }
+
+    selectPoint(point){
+        this.pointSelected.dispatch(point);
     }
 
 

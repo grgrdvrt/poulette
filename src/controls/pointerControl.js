@@ -1,4 +1,3 @@
-import Signal from "../utils/signal";
 import {
     getColorInMesh
 } from "../utils/color";
@@ -10,8 +9,6 @@ export default class PointerControl {
         this.model = model;
         this.handles = handles;
         this.mesh = mesh;
-
-        this.colorSelected = new Signal();
 
         this.initialDraggingPosition = null;
         this.draggingHandle = null;
@@ -87,7 +84,7 @@ export default class PointerControl {
                 this.pointerPosition.x - this.initialDraggingPosition.x,
                 this.pointerPosition.y - this.initialDraggingPosition.y,
             ) < minDragDist){
-                this.colorSelected.dispatch(this.draggingHandle.model.color);
+                this.model.selectPoint(this.draggingHandle.model);
             }
         }
         else{
@@ -111,7 +108,7 @@ export default class PointerControl {
         if(color){
             this.selectionHandle.model.color = color;
             this.handles.setHandleDomColor(this.selectionHandle.dom, color);
-            this.colorSelected.dispatch(color);
+            this.model.selectColor(color);
         }
         this.handles.setHandleDomPosition(this.selectionHandle.dom, this.pointerPosition);
     }
@@ -119,8 +116,8 @@ export default class PointerControl {
     onStopDragSelection = e => {
         this.updatePointerPosition(e);
         if(this.model.isPointInArea(this.pointerPosition)){
-            this.model.add(this.selectionHandle.model.color, this.pointerPosition);
-            this.colorSelected.dispatch(this.selectionHandle.model.color);
+            const point = this.model.add(this.selectionHandle.model.color, this.pointerPosition);
+            this.model.selectPoint(point);
         }
         this.handles.dom.removeChild(this.selectionHandle.dom);
         this.selectionHandle = null;

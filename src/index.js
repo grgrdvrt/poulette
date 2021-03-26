@@ -32,7 +32,11 @@ class Main {
 
         this.layout = new Layout(this.model);
         this.pointerControl = new PointerControl(this.model, this.handles, this.mesh);
-        this.pointerControl.colorSelected.add(this.onColorSelected, this);
+
+        this.deletedColors.colorRetreived.add(this.onColorSelected, this);
+
+        this.model.pointSelected.add(this.onPointSelected, this);
+        this.model.colorSelected.add(this.onColorSelected, this);
     }
 
     initDom(){
@@ -51,6 +55,10 @@ class Main {
 
         this.deletedColors = new DeletedColors(this.model);
         this.dom.appendChild(this.deletedColors.dom);
+    }
+
+    onPointSelected(point){
+        this.dom.style.backgroundColor = colorToHTML(point.color);
     }
 
     onColorSelected(color){
