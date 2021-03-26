@@ -1,6 +1,6 @@
 # Poulette, the color palette
 
-Poulette a proof of concept for a color mixer interface.  
+Poulette is a proof of concept for a color mixer interface.  
 [Play with the demo](https://www.grgrdvrt.com/poulette-demo)
 
 ![demo](images/demo.gif)
