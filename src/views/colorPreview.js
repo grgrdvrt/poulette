@@ -56,6 +56,8 @@ export default class ColorPreview{
                     backgroundColor:colorToHTML(color),
                 }
             );
+            this.transitionElement.classList.remove("finalState");
+            this.transitionElement.offsetWidth;
             this.transitionElement.classList.add("finalState");
         }
         else{
