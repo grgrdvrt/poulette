@@ -18,6 +18,7 @@ The the colors can be arranged in more familiar configurations.
 
 ## Code
 The wonderful [esbuild](https://esbuild.github.io/) is used for bundling the demo but any es6-compatible bundler should work.  
+
 I chose to not package the code as a ready-to-use component as it is difficult to satisfy every react, angular, vue, svelte... but I'd be very happy to see adaptations for these frameworks.  
 
 Note that this code has not been tested on a wide range of devices and browsers. Don't hesitate to report the issues you may find.
